@@ -1,12 +1,13 @@
 import random, sys, os
 import numpy as np
 sys.path.append(os.path.expanduser('~/git/time_freq_auditory_scene/'))
+
 from TimeFreqAuditoryScene import *
+from Chambers import *
 
 # This is a pychoacoustics implementation of the standard paradigm of Chambers and Pressnitzer 2014
 
 
-from matplotlib import pyplot as plt
 
 DELAY_CTX_TRITONE = "Delay Context <-> Tritone (s)"
 DELAY_INTER_TRIAL = "Delay trial_{i} <-> trial_{i+1} (s)"
@@ -143,13 +144,14 @@ def doTrial_context_bias(parent):
     # For experiments using the “Constant 1-Interval 2-Alternatives” paradigm
     # it is necessary to list the experimental conditions
     parent.prm['conditions'] = ["Up", "Down"]
-    parent.currentCondition = random.choice(parent.prm['conditions'])
+    condition = random.choice(parent.prm['conditions'])
+    parent.currentCondition = condition
     if parent.currentCondition == 'Up':
         parent.correctButton = 1
-        range_context = [1, 5]  # semitones
     elif parent.currentCondition == 'Down':
         parent.correctButton = 2
-        range_context = [7, 11]  # semitones
+
+    print(condition)
 
 
     # --------------- getting parameters from context
@@ -180,8 +182,8 @@ def doTrial_context_bias(parent):
         parent.prm[currBlock]['field'][parent.prm['fieldLabel'].index(DURATION_SP_TRT)]
     delay_inter_sp_trt = \
         parent.prm[currBlock]['field'][parent.prm['fieldLabel'].index(DELAY_SP_TRT)]
-    #ramps = \
-    #    parent.prm[currBlock]['field'][parent.prm['fieldLabel'].index(RAMPS)]
+    ramps = \
+        parent.prm[currBlock]['field'][parent.prm['fieldLabel'].index(RAMPS)]
     #channel = \
     #    parent.prm[currBlock]['chooser'][parent.prm['chooserLabel'].index("Ear:")]
 
@@ -193,46 +195,70 @@ def doTrial_context_bias(parent):
     fs = parent.prm['sampRate']
 
     # Shepard tones tritone
-    sp_st = int(np.random.randint(12))
+    sp_st = 12*np.random.rand()  #int(np.random.randint(12))
     fb1 = 2.**(sp_st/12.)  # base frequency chosen randomly uniformly on log-octave range
     # declare gaussian envelope on log frequency
-    mu_log = np.log(spec_env_mean)
-    sigma_log= np.log(2.)*spec_env_std  # nb_octave * log(2)
-    genv = GaussianSpectralEnvelope(mu_log=mu_log, sigma_log=sigma_log)
+    genv = GaussianSpectralEnvelope(mu=spec_env_mean, sigma_oct=spec_env_std)
 
     # ===================================================
     # Scene construction
     scene = Scene()
     run_time = 0
 
+    clearing = Clearing(n_tones=nb_tones_clear,
+                    tone_duration=duration_tone_clr,
+                    inter_tone_interval=delay_inter_sp_ctx,
+                    env=genv,
+                    delay=run_time,
+                    ramps=ramps)
+
+    run_time += clearing.getduration() + delay_clear_ctx
+
+    context = Context(n_tones=nb_sp_ctx,
+                    tone_duration=duration_sp_ctx,
+                    inter_tone_interval=delay_inter_sp_ctx,
+                    env=genv,
+                    fb_T1=fb1,
+                    range_st=[1,5],
+                    type="chords",  # chords or streams
+                    bias=condition,
+                    delay=run_time)
+
+    run_time += context.getduration() + delay_ctx_tritone
+    tritone = Tritone(fb=fb1,
+                      env=genv,
+                      delay=run_time,
+                      duration_sp=duration_sp_trt,
+                      delay_sp=delay_inter_sp_trt)
+
+    scene.List = [clearing ,context, tritone]
+
     # ===================================================
     # Constructing the clearing stimulus
-    clearing = []
-    st_clear = []
-    for i in range(nb_tones_clear):
-        st = range_context[0]+np.random.rand()*(range_context[1]-range_context[0])
-        st_clear.append(float(st))
-        tmp_st = ConstantIntervalChord(fb=fb1*2.**(st/12.),interval=np.sqrt(2.), env=genv, delay=run_time, duration=duration_tone_clr)
-        run_time += duration_tone_clr + delay_inter_sp_ctx
-        clearing.append(tmp_st)
-
+    #clearing = []
+    #st_clear = []
+    #for i in range(nb_tones_clear):
+    #    st = range_context[0]+np.random.rand()*(range_context[1]-range_context[0])
+    #    st_clear.append(float(st))
+    #    tmp_st = ConstantIntervalChord(fb=fb1*2.**(st/12.),interval=np.sqrt(2.), env=genv, delay=run_time, duration=duration_tone_clr)
+    #    run_time += duration_tone_clr + delay_inter_sp_ctx
+    #    clearing.append(tmp_st)
     # ===================================================
     # Constructing the context
-    run_time += delay_clear_ctx
-    context = []
-    st_ctx = []
-    for i in range(nb_sp_ctx):
-        st = np.random.rand()*12
-        st_ctx.append(float(st))
-        tmp_st = ShepardTone(fb=fb1*2.**(st/12.), env=genv, delay=run_time, duration=duration_sp_ctx)
-        run_time += duration_sp_ctx + delay_inter_sp_ctx
-        context.append(tmp_st)
-
+    #run_time += delay_clear_ctx
+    #context = []
+    #st_ctx = []
+    #for i in range(nb_sp_ctx):
+    #    st = np.random.rand()*12
+    #    st_ctx.append(float(st))
+    #    tmp_st = ShepardTone(fb=fb1*2.**(st/12.), env=genv, delay=run_time, duration=duration_sp_ctx)
+    #    run_time += duration_sp_ctx + delay_inter_sp_ctx
+    #    context.append(tmp_st)
     # ===================================================
     # constructing the tritone
-    run_time += delay_ctx_tritone
-    tritone = Tritone(fb=fb1, env=genv, delay=run_time, duration_sp=duration_sp_trt, delay_sp=delay_inter_sp_trt)
-    scene.List = clearing + context + [tritone]
+    #run_time += delay_ctx_tritone
+    #tritone = Tritone(fb=fb1, env=genv, delay=run_time, duration_sp=duration_sp_trt, delay_sp=delay_inter_sp_trt)
+    #scene.List = clearing + context + [tritone]
 
     # ===================================================
     # generate sound
@@ -252,7 +278,7 @@ def doTrial_context_bias(parent):
     # - base freq of T1
     # - base freq of clearing
     # - base freq of context
-    parent.prm['additional_parameters_to_write'] = [sp_st,st_clear,st_ctx]
+    # parent.prm['additional_parameters_to_write'] = [sp_st,st_clear,st_ctx]
 
     parent.playSequentialIntervals([xe])
 

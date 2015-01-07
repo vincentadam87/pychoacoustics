@@ -6,4 +6,5 @@ __all__ = ["audiogram",
            "F0DL",
            "level_discrimination",
            "wav_comparison",
-					 "context_bias"]
+		   "context_bias",
+           "context_bias_drop"]

@@ -19,10 +19,13 @@ DELAY_CLR_CTX = "Delay Clearing <-> Context (s)"
 DURATION_TONE_CLR = "Duration tone in clearing (s)"
 DURATION_SP_CTX = "Duration SP in context (s)"
 DELAY_SP_CONTEXT = "Delay SP <-> SP in context (s)"
+DELAY_TONES_CLR = "Delay TONE <-> TONE in clearing (s)"
 NB_SP_CTX = "#SP in context (int)"
 DURATION_SP_TRT = "Duration SP in tritone (s)"
 DELAY_SP_TRT = "Delay SP <-> SP in tritone (s)"
 RAMPS = "Ramps (s)"
+RANGE_CTX_DOWN = "bound of context in semitones DOWN"
+RANGE_CTX_UP = "bound of context in semitones UP"
 
 def initialize_context_bias(prm):
     """
@@ -40,7 +43,7 @@ def initialize_context_bias(prm):
 
 
     prm[exp_name]["paradigmChoices"] = ["Constant 1-Interval 2-Alternatives"]  # 1 stimulus, 2 choices
-    prm[exp_name]["opts"] = ["hasFeedback"]
+    prm[exp_name]["opts"] = []
 
     prm[exp_name]["buttonLabels"] = ["Up", "Down"]
     prm[exp_name]['defaultNIntervals'] = 1
@@ -84,36 +87,43 @@ def select_default_parameters_context_bias(parent, par):
     # - delay SP <-> SP in tritone
 
 
-
-    fieldLabel.append(DELAY_CTX_TRITONE)
+    fieldLabel.append(DURATION_SP_CTX)
     field.append(0.2)
-    fieldLabel.append(DELAY_INTER_TRIAL)
-    field.append(1)
-    fieldLabel.append(LEVEL)
-    field.append(64)
-    fieldLabel.append(SPEC_ENV_MEAN)
-    field.append(300.)
-    fieldLabel.append(SPEC_ENV_STD)
-    field.append(2.)
-
-    fieldLabel.append(NB_TONES_CLR)
-    field.append(3)
-    fieldLabel.append(DELAY_CLR_CTX)
-    field.append(0.5)
+    fieldLabel.append(DURATION_SP_TRT)
+    field.append(0.2)
     fieldLabel.append(DURATION_TONE_CLR)
     field.append(0.2)
 
-    fieldLabel.append(DURATION_SP_CTX)
-    field.append(0.2)
+    fieldLabel.append(DELAY_SP_TRT)
+    field.append(0.05)
     fieldLabel.append(DELAY_SP_CONTEXT)
-    field.append(0.01)
+    field.append(0.05)
+    fieldLabel.append(DELAY_TONES_CLR)
+    field.append(0.05)
+
+    fieldLabel.append(RANGE_CTX_DOWN)
+    field.append(1)
+    fieldLabel.append(RANGE_CTX_UP)
+    field.append(5)
+
+    fieldLabel.append(DELAY_CLR_CTX)
+    field.append(0.2)
+    fieldLabel.append(DELAY_CTX_TRITONE)
+    field.append(0.2)
+
+    fieldLabel.append(NB_TONES_CLR)
+    field.append(3)
     fieldLabel.append(NB_SP_CTX)
     field.append(5)
 
-    fieldLabel.append(DURATION_SP_TRT)
-    field.append(0.2)
-    fieldLabel.append(DELAY_SP_TRT)
-    field.append(0.01)
+    fieldLabel.append(LEVEL)
+    field.append(64)
+    fieldLabel.append(SPEC_ENV_MEAN)
+    field.append(960.)
+    fieldLabel.append(SPEC_ENV_STD)
+    field.append(2.)
+
+
 
     fieldLabel.append(RAMPS)
     field.append(0.01)
@@ -143,12 +153,12 @@ def doTrial_context_bias(parent):
 
     # For experiments using the “Constant 1-Interval 2-Alternatives” paradigm
     # it is necessary to list the experimental conditions
-    parent.prm['conditions'] = ["Up", "Down"]
+    parent.prm['conditions'] = ["up", "down"]
     condition = random.choice(parent.prm['conditions'])
     parent.currentCondition = condition
-    if parent.currentCondition == 'Up':
+    if parent.currentCondition == 'up':
         parent.correctButton = 1
-    elif parent.currentCondition == 'Down':
+    elif parent.currentCondition == 'down':
         parent.correctButton = 2
 
     print(condition)
@@ -158,8 +168,6 @@ def doTrial_context_bias(parent):
 
     delay_ctx_tritone = \
         parent.prm[currBlock]['field'][parent.prm['fieldLabel'].index(DELAY_CTX_TRITONE)]
-    delay_inter_trial = \
-        parent.prm[currBlock]['field'][parent.prm['fieldLabel'].index(DELAY_INTER_TRIAL)]
     level = \
         parent.prm[currBlock]['field'][parent.prm['fieldLabel'].index(LEVEL)]
     spec_env_mean = \
@@ -182,7 +190,13 @@ def doTrial_context_bias(parent):
         parent.prm[currBlock]['field'][parent.prm['fieldLabel'].index(DURATION_SP_TRT)]
     delay_inter_sp_trt = \
         parent.prm[currBlock]['field'][parent.prm['fieldLabel'].index(DELAY_SP_TRT)]
-    ramps = \
+    delay_inter_sp_clr = \
+        parent.prm[currBlock]['field'][parent.prm['fieldLabel'].index(DELAY_TONES_CLR)]
+    range_st_up = \
+        parent.prm[currBlock]['field'][parent.prm['fieldLabel'].index(RANGE_CTX_UP)]
+    range_st_down = \
+        parent.prm[currBlock]['field'][parent.prm['fieldLabel'].index(RANGE_CTX_DOWN)]
+    ramp = \
         parent.prm[currBlock]['field'][parent.prm['fieldLabel'].index(RAMPS)]
     #channel = \
     #    parent.prm[currBlock]['chooser'][parent.prm['chooserLabel'].index("Ear:")]
@@ -193,7 +207,6 @@ def doTrial_context_bias(parent):
 
     # Global parameters
     fs = parent.prm['sampRate']
-
     # Shepard tones tritone
     sp_st = 12*np.random.rand()  #int(np.random.randint(12))
     fb1 = 2.**(sp_st/12.)  # base frequency chosen randomly uniformly on log-octave range
@@ -207,10 +220,10 @@ def doTrial_context_bias(parent):
 
     clearing = Clearing(n_tones=nb_tones_clear,
                     tone_duration=duration_tone_clr,
-                    inter_tone_interval=delay_inter_sp_ctx,
+                    inter_tone_interval=delay_inter_sp_clr,
                     env=genv,
                     delay=run_time,
-                    ramps=ramps)
+                    ramp=ramp)
 
     run_time += clearing.getduration() + delay_clear_ctx
 
@@ -218,8 +231,9 @@ def doTrial_context_bias(parent):
                     tone_duration=duration_sp_ctx,
                     inter_tone_interval=delay_inter_sp_ctx,
                     env=genv,
+                    ramp=ramp,
                     fb_T1=fb1,
-                    range_st=[1,5],
+                    range_st=[range_st_down, range_st_up],
                     type="chords",  # chords or streams
                     bias=condition,
                     delay=run_time)
@@ -228,57 +242,28 @@ def doTrial_context_bias(parent):
     tritone = Tritone(fb=fb1,
                       env=genv,
                       delay=run_time,
+                      ramp=ramp,
                       duration_sp=duration_sp_trt,
                       delay_sp=delay_inter_sp_trt)
 
     scene.List = [clearing ,context, tritone]
 
-    # ===================================================
-    # Constructing the clearing stimulus
-    #clearing = []
-    #st_clear = []
-    #for i in range(nb_tones_clear):
-    #    st = range_context[0]+np.random.rand()*(range_context[1]-range_context[0])
-    #    st_clear.append(float(st))
-    #    tmp_st = ConstantIntervalChord(fb=fb1*2.**(st/12.),interval=np.sqrt(2.), env=genv, delay=run_time, duration=duration_tone_clr)
-    #    run_time += duration_tone_clr + delay_inter_sp_ctx
-    #    clearing.append(tmp_st)
-    # ===================================================
-    # Constructing the context
-    #run_time += delay_clear_ctx
-    #context = []
-    #st_ctx = []
-    #for i in range(nb_sp_ctx):
-    #    st = np.random.rand()*12
-    #    st_ctx.append(float(st))
-    #    tmp_st = ShepardTone(fb=fb1*2.**(st/12.), env=genv, delay=run_time, duration=duration_sp_ctx)
-    #    run_time += duration_sp_ctx + delay_inter_sp_ctx
-    #    context.append(tmp_st)
-    # ===================================================
-    # constructing the tritone
-    #run_time += delay_ctx_tritone
-    #tritone = Tritone(fb=fb1, env=genv, delay=run_time, duration_sp=duration_sp_trt, delay_sp=delay_inter_sp_trt)
-    #scene.List = clearing + context + [tritone]
+
 
     # ===================================================
     # generate sound
     print('fs:'+str(fs))
     x = scene.generate(fs=fs)
-    # 1D np.ndarray -> 2D np.ndarray (for binaural signal)
-    xe = np.vstack([x, x]).T
+    xe = np.vstack([x, x]).T    # 1D np.ndarray -> 2D np.ndarray (for binaural signal)
     print(xe.shape)
     maxLevel = parent.prm['maxLevel']
     amp = 10**((level - maxLevel) / 20.)
-
     xe *= amp
-    #plt.plot(xe)
-    #plt.show()
 
     # additionally saving
     # - base freq of T1
-    # - base freq of clearing
     # - base freq of context
-    # parent.prm['additional_parameters_to_write'] = [sp_st,st_clear,st_ctx]
+    parent.prm['additional_parameters_to_write'] = [fb1, list(context.fbs)]
 
     parent.playSequentialIntervals([xe])
 

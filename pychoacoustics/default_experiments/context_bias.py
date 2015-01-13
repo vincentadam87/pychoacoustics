@@ -12,8 +12,8 @@ from Chambers import *
 DELAY_CTX_TRITONE = "Delay Context <-> Tritone (s)"
 DELAY_INTER_TRIAL = "Delay trial_{i} <-> trial_{i+1} (s)"
 LEVEL = "Level (dB SPL)"
-SPEC_ENV_MEAN = "Spectral Envelope: mean (Hz)"
-SPEC_ENV_STD ="Spectral Envelope: std (octave)"
+SPEC_ENV_MEAN = "Spectral Envelope mean (Hz)"
+SPEC_ENV_STD = "Spectral Envelope std (octave)"
 NB_TONES_CLR = "#Tones in clearing stimulus (int)"
 DELAY_CLR_CTX = "Delay Clearing <-> Context (s)"
 DURATION_TONE_CLR = "Duration tone in clearing (s)"
@@ -122,8 +122,6 @@ def select_default_parameters_context_bias(parent, par):
     field.append(960.)
     fieldLabel.append(SPEC_ENV_STD)
     field.append(2.)
-
-
 
     fieldLabel.append(RAMPS)
     field.append(0.01)

@@ -1,0 +1,123 @@
+Phones: Senn HD650
+Shuffle Mode: Ask
+Response Mode: Real Listener
+Auto Resp. Mode Perc. Corr.: 75
+Sample Rate: 44100
+Bits: 32
+Trigger On/Off: False
+Experiment Label: 
+End Command: 
+Shuffling Scheme: 
+No. Repetitions: 1
+Proc. Res.: False
+Proc. Res. Table: False
+Plot: False
+PDF Plot: False
+*******************************************************
+Block Position: 1
+Condition Label: 
+Experiment: Contextual Bias Tritone (classical)
+Paradigm: Constant 1-Interval 2-Alternatives
+Pre-Trial Silence (ms): 200
+Warning Interval: No
+Interval Lights: Yes
+Response Light: Neutral :False
+Response Light Duration (ms): 500 :False
+.
+..
+No. Trials: 50 :False
+No. Practice Trials: 0 :False
+...
+Channel: Both :False
+....
+.....
+Duration SP in context (s): 0.2 :False
+Duration SP in tritone (s): 0.2 :False
+Duration tone in clearing (s): 0.2 :False
+Delay SP <-> SP in tritone (s): 0.05 :False
+Delay SP <-> SP in context (s): 0.05 :False
+Delay TONE <-> TONE in clearing (s): 0.05 :False
+bound of context in semitones DOWN: 1 :False
+bound of context in semitones UP: 5 :False
+Delay Clearing <-> Context (s): 0.2 :False
+Delay Context <-> Tritone (s): 0.2 :False
+#Tones in clearing stimulus (int): 3 :False
+#SP in context (int): 1 :False
+Level (dB SPL): 64 :False
+Spectral Envelope mean (Hz): 960 :False
+Spectral Envelope std (octave): 2 :False
+Ramps (s): 0.01 :False
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+*******************************************************
+Block Position: 2
+Condition Label: 
+Experiment: Contextual Bias Tritone (classical)
+Paradigm: Constant 1-Interval 2-Alternatives
+Pre-Trial Silence (ms): 200
+Warning Interval: No
+Interval Lights: Yes
+Response Light: Neutral :False
+Response Light Duration (ms): 500 :False
+.
+..
+No. Trials: 50 :False
+No. Practice Trials: 0 :False
+...
+Channel: Both :False
+....
+.....
+Duration SP in context (s): 0.2 :False
+Duration SP in tritone (s): 0.2 :False
+Duration tone in clearing (s): 0.2 :False
+Delay SP <-> SP in tritone (s): 0.05 :False
+Delay SP <-> SP in context (s): 0.05 :False
+Delay TONE <-> TONE in clearing (s): 0.05 :False
+bound of context in semitones DOWN: 1 :False
+bound of context in semitones UP: 5 :False
+Delay Clearing <-> Context (s): 0.2 :False
+Delay Context <-> Tritone (s): 0.2 :False
+#Tones in clearing stimulus (int): 3 :False
+#SP in context (int): 3 :False
+Level (dB SPL): 64 :False
+Spectral Envelope mean (Hz): 960 :False
+Spectral Envelope std (octave): 2 :False
+Ramps (s): 0.01 :False
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+*******************************************************
+Block Position: 3
+Condition Label: 
+Experiment: Contextual Bias Tritone (classical)
+Paradigm: Constant 1-Interval 2-Alternatives
+Pre-Trial Silence (ms): 200
+Warning Interval: No
+Interval Lights: Yes
+Response Light: Neutral :False
+Response Light Duration (ms): 500 :False
+.
+..
+No. Trials: 50 :False
+No. Practice Trials: 0 :False
+...
+Channel: Both :False
+....
+.....
+Duration SP in context (s): 0.2 :False
+Duration SP in tritone (s): 0.2 :False
+Duration tone in clearing (s): 0.2 :False
+Delay SP <-> SP in tritone (s): 0.05 :False
+Delay SP <-> SP in context (s): 0.05 :False
+Delay TONE <-> TONE in clearing (s): 0.05 :False
+bound of context in semitones DOWN: 1 :False
+bound of context in semitones UP: 5 :False
+Delay Clearing <-> Context (s): 0.2 :False
+Delay Context <-> Tritone (s): 0.2 :False
+#Tones in clearing stimulus (int): 3 :False
+#SP in context (int): 6 :False
+Level (dB SPL): 64 :False
+Spectral Envelope mean (Hz): 960 :False
+Spectral Envelope std (octave): 2 :False
+Ramps (s): 0.01 :False
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+

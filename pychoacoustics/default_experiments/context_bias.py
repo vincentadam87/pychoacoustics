@@ -35,16 +35,13 @@ def initialize_context_bias(prm):
     exp_name = "Contextual Bias Tritone (classical)"
     prm["experimentsChoices"].append(exp_name)
     prm[exp_name] = {}
-
     # paradigm: Constant 1-Interval 2-Alternatives
     # This paradigm implements a constant difference method for tasks
     # with a single observation interval and two response alternatives,
     # such as the “Yes/No” signal detection task.
 
-
     prm[exp_name]["paradigmChoices"] = ["Constant 1-Interval 2-Alternatives"]  # 1 stimulus, 2 choices
     prm[exp_name]["opts"] = []
-
     prm[exp_name]["buttonLabels"] = ["Up", "Down"]
     prm[exp_name]['defaultNIntervals'] = 1
     prm[exp_name]['defaultNAlternatives'] = 2
@@ -244,7 +241,7 @@ def doTrial_context_bias(parent):
                       duration_sp=duration_sp_trt,
                       delay_sp=delay_inter_sp_trt)
 
-    scene.List = [clearing ,context, tritone]
+    scene.add([clearing ,context, tritone])
 
 
 

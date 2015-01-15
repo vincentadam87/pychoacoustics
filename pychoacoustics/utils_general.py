@@ -62,6 +62,8 @@ def strToBoolean(stringValue):
         out = True
     elif stringValue == "False":
         out = False
+    else:
+        out = False
     return out
     
     

@@ -171,7 +171,7 @@ def main(argv):
         prm['graphicssystem'] = args.graphicssystem
     if args.display:
         prm['display'] = args.display
-  
+
     prm = global_parameters.get_prefs(prm)
     callArgs = sys.argv
     if 'display' in prm:
